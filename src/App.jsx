@@ -10,7 +10,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/application" element={<Application />} />
-        {/* Дополнительные маршруты будут добавлены позже */}
       </Routes>
     </Router>
   )
