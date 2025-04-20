@@ -6,77 +6,236 @@
 }
 
 .header-container {
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 0 1rem;
 }
 
 .header-logo a {
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
   text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.header-logo a:hover {
   color: #3498db;
+  font-weight: 700;
 }
 
-.header-nav ul {
+.header-logo h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.menu-icon {
+  display: block;
+  position: relative;
+  width: 24px;
+  height: 2px;
+  background-color: #2c3e50;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  background-color: #2c3e50;
+  left: 0;
+  transition: transform 0.3s ease;
+}
+
+.menu-icon::before {
+  top: -6px;
+}
+
+.menu-icon::after {
+  bottom: -6px;
+}
+
+.header-nav {
+  flex: 1;
+  margin: 0 2rem;
+}
+
+.nav-list {
   display: flex;
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
-.header-nav li {
+.nav-item {
   margin: 0 1rem;
 }
 
-.header-nav a {
-  color: white;
+.nav-link {
   text-decoration: none;
+  color: white;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-.header-nav a:hover {
+.nav-link:hover {
   color: #3498db;
 }
 
 .header-auth {
   display: flex;
-  gap: 1rem;
+  align-items: center;
 }
 
-.auth-button {
+.auth-buttons {
+  display: flex;
+}
+
+.login-button,
+.register-button {
   padding: 0.5rem 1rem;
+  text-decoration: none;
   border-radius: 4px;
   font-weight: 500;
-  text-decoration: none;
   transition: all 0.3s ease;
 }
 
-.login {
-  color: white;
-  border: 1px solid white;
+.login-button {
+  color: #3498db;
+  margin-right: 0.5rem;
 }
 
-.login:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.login-button:hover {
+  color: #2980b9;
+  background-color: rgba(52, 152, 219, 0.1);
 }
 
-.register {
+.register-button {
   background-color: #3498db;
   color: white;
-  border: 1px solid #3498db;
 }
 
-.register:hover {
+.register-button:hover {
   background-color: #2980b9;
-  border-color: #2980b9;
+}
+
+/* Стили для авторизованного пользователя */
+.auth-user {
+  display: flex;
+  align-items: center;
+}
+
+.user-greeting {
+  margin-right: 1rem;
+  font-weight: 500;
+  color: white;
+}
+
+.profile-button {
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 0.75rem;
+  transition: background-color 0.3s ease;
+}
+
+.profile-button:hover {
+  background-color: #2980b9;
+}
+
+.logout-button {
+  padding: 0.5rem 1rem;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+/* Адаптивный дизайн */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    order: 3;
+  }
+
+  .header-logo {
+    flex: 1;
+  }
+
+  .header-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    z-index: 100;
+  }
+
+  .header-nav.open {
+    max-height: 300px;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .nav-item {
+    margin: 0.5rem 0;
+  }
+
+  .header-auth {
+    order: 2;
+  }
+
+  .auth-user {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .profile-button {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .user-greeting {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-buttons {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .login-button {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
 }
