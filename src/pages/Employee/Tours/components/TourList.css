@@ -1,0 +1,141 @@
+.tour-list {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tour-list-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tour-list-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 2fr 100px;
+  background-color: #f8f9fa;
+  font-weight: 600;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.tour-list-header > div {
+  padding: 0 0.5rem;
+}
+
+.tour-list-body {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.tour-list-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 2fr 100px;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.tour-list-item:hover {
+  background-color: #f8f9fa;
+}
+
+.tour-list-item:last-child {
+  border-bottom: none;
+}
+
+.tour-list-item > div {
+  padding: 0 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.tour-item-name {
+  font-weight: 500;
+}
+
+.tour-item-country {
+  color: #555;
+}
+
+.tour-item-season,
+.tour-item-type {
+  text-align: center;
+}
+
+.tour-item-slots {
+  text-align: center;
+  font-weight: 500;
+}
+
+.tour-item-dates {
+  color: #555;
+}
+
+.tour-item-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.tour-edit-button,
+.tour-delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.tour-edit-button {
+  color: #2196f3;
+}
+
+.tour-delete-button {
+  color: #f44336;
+}
+
+.tour-edit-button:hover {
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.tour-delete-button:hover {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+/* Мобильная адаптация */
+@media (max-width: 992px) {
+  .tour-list-header,
+  .tour-list-item {
+    grid-template-columns: 2fr 1fr 1fr 1fr 100px;
+  }
+
+  .tour-header-season,
+  .tour-item-season,
+  .tour-header-dates,
+  .tour-item-dates {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .tour-list-header,
+  .tour-list-item {
+    grid-template-columns: 2fr 1fr 1fr 100px;
+  }
+
+  .tour-header-type,
+  .tour-item-type {
+    display: none;
+  }
+}

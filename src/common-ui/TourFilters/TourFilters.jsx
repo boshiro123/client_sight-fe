@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Season } from "../../models/enums"
+import { Season, TourType } from "../../models/enums"
 import "./TourFilters.css"
 
 const TourFilters = ({ onFilterChange }) => {
@@ -10,9 +10,6 @@ const TourFilters = ({ onFilterChange }) => {
     duration: "",
     country: "",
   })
-
-  // Список типов туров (может быть получен с сервера в будущем)
-  const tourTypes = ["Пляжный", "Активный", "Семейный", "Экстремальный"]
 
   // Диапазоны длительности туров
   const durationRanges = [
@@ -31,6 +28,8 @@ const TourFilters = ({ onFilterChange }) => {
     "ОАЭ",
     "Мальдивы",
     "Греция",
+    "Австрия",
+    "Чехия",
   ]
 
   // Обработка изменения значений фильтров
@@ -102,6 +101,7 @@ const TourFilters = ({ onFilterChange }) => {
             <option value={Season.SPRING}>Весна</option>
             <option value={Season.SUMMER}>Лето</option>
             <option value={Season.AUTUMN}>Осень</option>
+            <option value={Season.ALL_YEAR}>Круглый год</option>
           </select>
         </div>
 
@@ -113,11 +113,14 @@ const TourFilters = ({ onFilterChange }) => {
             onChange={e => handleFilterChange("type", e.target.value)}
           >
             <option value="">Все типы</option>
-            {tourTypes.map(type => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
+            <option value={TourType.BEACH}>Пляжный</option>
+            <option value={TourType.EXCURSION}>Экскурсионный</option>
+            <option value={TourType.ADVENTURE}>Приключенческий</option>
+            <option value={TourType.SKIING}>Горнолыжный</option>
+            <option value={TourType.CRUISE}>Круиз</option>
+            <option value={TourType.CULTURAL}>Культурный</option>
+            <option value={TourType.MEDICAL}>Оздоровительный</option>
+            <option value={TourType.EDUCATIONAL}>Образовательный</option>
           </select>
         </div>
 

@@ -76,7 +76,7 @@ const EmployeeDashboard = () => {
                       <a href="#overview">Обзор</a>
                     </li>
                     <li>
-                      <a href="#tours">Туры</a>
+                      <a href="/employee/tours">Туры</a>
                     </li>
                     <li>
                       <a href="#bookings">Бронирования</a>

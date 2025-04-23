@@ -94,6 +94,17 @@ const Header = () => {
                   Профиль
                 </button>
               )}
+              {userData && userData.role === "EMPLOYEE" && (
+                <button className="profile-button" onClick={navigateToProfile}>
+                  Профиль
+                </button>
+              )}
+              {userData && userData.role === "MANAGER" && (
+                <button className="profile-button" onClick={navigateToProfile}>
+                  Профиль
+                </button>
+              )}
+
               <button className="logout-button" onClick={handleLogout}>
                 Выйти
               </button>

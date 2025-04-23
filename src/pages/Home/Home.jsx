@@ -3,26 +3,33 @@ import Header from "../../common-ui/Header"
 import Footer from "../../common-ui/Footer"
 import TourCard from "../../common-ui/TourCard"
 import TourFilters from "../../common-ui/TourFilters"
+import * as TourService from "../../services/TourService"
 import "./Home.css"
-
-// Тестовые данные для примера, в реальном приложении будут получены с сервера
-import { mockTours } from "./mockData"
 
 const Home = () => {
   const [tours, setTours] = useState([])
   const [filteredTours, setFilteredTours] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [sortBy, setSortBy] = useState("date")
 
-  // Имитация загрузки данных с сервера
+  // Загрузка реальных данных с сервера
   useEffect(() => {
-    const fetchTours = () => {
-      // Тут будет API запрос в реальном приложении
-      setTimeout(() => {
-        setTours(mockTours)
-        setFilteredTours(mockTours)
+    const fetchTours = async () => {
+      setLoading(true)
+      setError(null)
+
+      try {
+        const toursData = await TourService.getAllTours()
+        console.log(toursData)
+        setTours(toursData)
+        setFilteredTours(toursData)
+      } catch (err) {
+        console.error("Ошибка при загрузке туров:", err)
+        setError("Не удалось загрузить туры. Пожалуйста, попробуйте позже.")
+      } finally {
         setLoading(false)
-      }, 800)
+      }
     }
 
     fetchTours()
@@ -57,18 +64,25 @@ const Home = () => {
       result = result.filter(tour => tour.type === filters.type)
     }
 
-    // Фильтрация по длительности
+    // Фильтрация по длительности (вычисляем из дат начала и окончания)
     if (filters.duration) {
       const [min, max] = filters.duration.split("-")
-      if (max && max !== "+") {
-        result = result.filter(
-          tour =>
-            tour.duration >= parseInt(min) && tour.duration <= parseInt(max)
+
+      result = result.filter(tour => {
+        // Вычисляем длительность в днях из дат
+        const startDate = new Date(tour.startDate)
+        const endDate = new Date(tour.endDate)
+        const duration = Math.ceil(
+          (endDate - startDate) / (1000 * 60 * 60 * 24)
         )
-      } else if (min) {
-        // Для случая '15+'
-        result = result.filter(tour => tour.duration >= parseInt(min))
-      }
+
+        if (max && max !== "+") {
+          return duration >= parseInt(min) && duration <= parseInt(max)
+        } else {
+          // Для случая '15+'
+          return duration >= parseInt(min)
+        }
+      })
     }
 
     setFilteredTours(result)
@@ -88,13 +102,23 @@ const Home = () => {
         )
         break
       case "duration":
-        sortedTours.sort((a, b) => a.duration - b.duration)
+        sortedTours.sort((a, b) => {
+          const durationA = Math.ceil(
+            (new Date(a.endDate) - new Date(a.startDate)) /
+              (1000 * 60 * 60 * 24)
+          )
+          const durationB = Math.ceil(
+            (new Date(b.endDate) - new Date(b.startDate)) /
+              (1000 * 60 * 60 * 24)
+          )
+          return durationA - durationB
+        })
         break
       case "price-low":
-        // Если бы была цена
+        sortedTours.sort((a, b) => a.price - b.price)
         break
       case "price-high":
-        // Если бы была цена
+        sortedTours.sort((a, b) => b.price - a.price)
         break
       default:
         break
@@ -162,12 +186,16 @@ const Home = () => {
                 <select id="sort" value={sortBy} onChange={handleSortChange}>
                   <option value="date">Дате отправления</option>
                   <option value="duration">Длительности</option>
+                  <option value="price-low">Цене (по возрастанию)</option>
+                  <option value="price-high">Цене (по убыванию)</option>
                 </select>
               </div>
             </div>
 
             {loading ? (
               <div className="loading">Загрузка туров...</div>
+            ) : error ? (
+              <div className="error">{error}</div>
             ) : filteredTours.length === 0 ? (
               <div className="no-results">
                 Туры не найдены. Попробуйте изменить параметры поиска.
