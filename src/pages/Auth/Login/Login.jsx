@@ -22,7 +22,9 @@ const Login = () => {
     if (location.state && location.state.message) {
       setSuccessMessage(location.state.message)
       // Очищаем state, чтобы сообщение не появлялось при обновлении страницы
-      window.history.replaceState({}, document.title)
+      // Но сохраняем redirectTo если оно есть
+      const redirectTo = location.state.redirectTo
+      window.history.replaceState({ redirectTo }, document.title)
     }
   }, [location.state])
 
@@ -36,6 +38,13 @@ const Login = () => {
   // Функция для перенаправления пользователя в зависимости от роли
   const redirectUserBasedOnRole = async () => {
     try {
+      // Проверяем, есть ли URL для перенаправления (например, если пользователь пришел со страницы заявки)
+      const redirectTo = location.state?.redirectTo
+      if (redirectTo) {
+        navigate(redirectTo)
+        return
+      }
+
       const userData = await AuthService.getCurrentUser()
 
       switch (userData.role) {

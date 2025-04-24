@@ -1,0 +1,30 @@
+.bookings-page {
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bookings-main {
+  flex: 1;
+  padding: 20px;
+}
+
+.bookings-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+}
+
+@media (max-width: 768px) {
+  .bookings-main {
+    padding: 10px;
+  }
+
+  .bookings-container {
+    padding: 16px;
+  }
+}

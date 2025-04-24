@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import Header from "../../common-ui/Header"
 import Footer from "../../common-ui/Footer"
+import * as TourService from "../../services/TourService"
+import * as ApplicationService from "../../services/ApplicationService"
+import * as AuthService from "../../services/AuthService"
+import { AgeGroup, Gender } from "../../models/enums"
 import "./Application.css"
-
-// Имитация получения данных с сервера (в реальном приложении данные будут получены через API)
-import { mockTours } from "../Home/mockData"
 
 const Application = () => {
   const navigate = useNavigate()
@@ -19,28 +20,57 @@ const Application = () => {
     email: "",
     tourId: initialTourId || "",
     notes: "",
+    gender: "",
+    ageGroup: "",
   })
 
   const [availableTours, setAvailableTours] = useState([])
   const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
   const [errors, setErrors] = useState({})
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
+  const [selectedTour, setSelectedTour] = useState(null)
 
+  // Проверяем авторизацию и получаем данные пользователя
+  useEffect(() => {}, [navigate, location])
+
+  // Загружаем доступные туры
   useEffect(() => {
-    // Имитация загрузки доступных туров с сервера
-    const fetchAvailableTours = () => {
-      setTimeout(() => {
+    const fetchAvailableTours = async () => {
+      try {
+        setLoading(true)
+        const tours = await TourService.getAllTours()
+
         // Фильтруем туры, у которых есть свободные места и регистрация не закрыта
-        const tours = mockTours.filter(
+        const availableTours = tours.filter(
           tour => tour.availableSlots > 0 && !tour.isRegistrationClosed
         )
-        setAvailableTours(tours)
+
+        setAvailableTours(availableTours)
+
+        // Если есть initialTourId, заполняем данные о выбранном туре
+        if (initialTourId) {
+          const selectedTour = availableTours.find(
+            tour => tour.id.toString() === initialTourId
+          )
+          if (selectedTour) {
+            setSelectedTour(selectedTour)
+          }
+        }
+      } catch (err) {
+        console.error("Ошибка при загрузке туров:", err)
+        setError(
+          "Не удалось загрузить доступные туры. Пожалуйста, попробуйте позже."
+        )
+      } finally {
         setLoading(false)
-      }, 500)
+      }
     }
 
     fetchAvailableTours()
-  }, [])
+  }, [initialTourId])
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -48,6 +78,12 @@ const Application = () => {
       ...formData,
       [name]: value,
     })
+
+    // Если изменился выбранный тур, обновляем selectedTour
+    if (name === "tourId") {
+      const tour = availableTours.find(t => t.id.toString() === value)
+      setSelectedTour(tour || null)
+    }
 
     // Очищаем ошибку для поля при его изменении
     if (errors[name]) {
@@ -66,12 +102,14 @@ const Application = () => {
       newErrors.fullName = "Пожалуйста, введите ваше полное имя"
     }
 
-    // Валидация телефона
-    const phoneRegex = /^\+?[0-9\s-()]{10,15}$/
+    // Валидация телефона для Беларуси
+    const phoneRegex =
+      /^\+375\s?\(?(17|29|33|44|25)\)?\s?\d{3}\-?\d{2}\-?\d{2}$/
     if (!formData.phoneNumber.trim()) {
       newErrors.phoneNumber = "Пожалуйста, введите ваш номер телефона"
     } else if (!phoneRegex.test(formData.phoneNumber)) {
-      newErrors.phoneNumber = "Пожалуйста, введите корректный номер телефона"
+      newErrors.phoneNumber =
+        "Пожалуйста, введите корректный номер телефона в формате +375 (XX) XXX-XX-XX"
     }
 
     // Валидация email
@@ -87,29 +125,64 @@ const Application = () => {
       newErrors.tourId = "Пожалуйста, выберите тур"
     }
 
+    // Валидация пола
+    if (!formData.gender) {
+      newErrors.gender = "Пожалуйста, укажите ваш пол"
+    }
+
+    // Валидация возрастной группы
+    if (!formData.ageGroup) {
+      newErrors.ageGroup = "Пожалуйста, укажите вашу возрастную группу"
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
 
     if (validateForm()) {
-      // Имитация отправки данных формы на сервер
-      console.log("Submitting application:", formData)
+      try {
+        setSubmitting(true)
+        setError(null)
 
-      // Здесь будет код для отправки данных на сервер
-      setTimeout(() => {
+        // Создаем объект с данными заявки
+        const applicationData = {
+          fullName: formData.fullName,
+          phoneNumber: formData.phoneNumber,
+          email: formData.email,
+          tourId: parseInt(formData.tourId),
+          gender: formData.gender,
+          ageGroup: formData.ageGroup,
+          status: "PENDING",
+        }
+
+        // Отправляем заявку на сервер
+        const response = await ApplicationService.createApplication(
+          applicationData
+        )
+        console.log("Application submitted successfully:", response)
+
         setSubmitted(true)
-        // После успешной отправки можно очистить форму
+        // После успешной отправки очищаем форму
         setFormData({
           fullName: "",
           phoneNumber: "",
           email: "",
           tourId: "",
           notes: "",
+          gender: "",
+          ageGroup: "",
         })
-      }, 1000)
+      } catch (err) {
+        console.error("Ошибка при отправке заявки:", err)
+        setError(
+          "Не удалось отправить заявку. Пожалуйста, проверьте введенные данные и попробуйте снова."
+        )
+      } finally {
+        setSubmitting(false)
+      }
     }
   }
 
@@ -157,6 +230,8 @@ const Application = () => {
       <main className="application-main">
         <div className="container">
           <h1>Заявка на тур</h1>
+
+          {error && <div className="application-error">{error}</div>}
 
           {loading ? (
             <div className="loading">Загрузка доступных туров...</div>
@@ -213,7 +288,7 @@ const Application = () => {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    placeholder="+7 (___) ___-__-__"
+                    placeholder="+375 (XX) XXX-XX-XX"
                     className={errors.phoneNumber ? "error" : ""}
                   />
                   {errors.phoneNumber && (
@@ -238,6 +313,53 @@ const Application = () => {
                   )}
                 </div>
 
+                <div className="form-group-row">
+                  <div className="form-group">
+                    <label htmlFor="gender">
+                      Пол <span className="required-mark">*</span>
+                    </label>
+                    <select
+                      id="gender"
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleChange}
+                      className={errors.gender ? "error" : ""}
+                    >
+                      <option value="">Выберите пол</option>
+                      <option value={Gender.MALE}>Мужской</option>
+                      <option value={Gender.FEMALE}>Женский</option>
+                      <option value={Gender.OTHER}>Другой</option>
+                    </select>
+                    {errors.gender && (
+                      <div className="error-message">{errors.gender}</div>
+                    )}
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="ageGroup">
+                      Возрастная группа <span className="required-mark">*</span>
+                    </label>
+                    <select
+                      id="ageGroup"
+                      name="ageGroup"
+                      value={formData.ageGroup}
+                      onChange={handleChange}
+                      className={errors.ageGroup ? "error" : ""}
+                    >
+                      <option value="">Выберите возрастную группу</option>
+                      <option value={AgeGroup.UNDER_18}>До 18 лет</option>
+                      <option value={AgeGroup.AGE_18_20}>18-20 лет</option>
+                      <option value={AgeGroup.AGE_21_25}>21-25 лет</option>
+                      <option value={AgeGroup.AGE_26_35}>26-35 лет</option>
+                      <option value={AgeGroup.AGE_36_50}>36-50 лет</option>
+                      <option value={AgeGroup.OVER_50}>Старше 50 лет</option>
+                    </select>
+                    {errors.ageGroup && (
+                      <div className="error-message">{errors.ageGroup}</div>
+                    )}
+                  </div>
+                </div>
+
                 <div className="form-group">
                   <label htmlFor="tourId">
                     Выберите тур <span className="required-mark">*</span>
@@ -249,12 +371,10 @@ const Application = () => {
                     onChange={handleChange}
                     className={errors.tourId ? "error" : ""}
                   >
-                    <option value="">-- Выберите тур --</option>
+                    <option value="">Выберите тур</option>
                     {availableTours.map(tour => (
                       <option key={tour.id} value={tour.id}>
-                        {tour.name} (
-                        {new Date(tour.startDate).toLocaleDateString("ru-RU")} -{" "}
-                        {new Date(tour.endDate).toLocaleDateString("ru-RU")})
+                        {tour.name} ({tour.country})
                       </option>
                     ))}
                   </select>
@@ -263,27 +383,65 @@ const Application = () => {
                   )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="notes">Дополнительные пожелания</label>
-                  <textarea
-                    id="notes"
-                    name="notes"
-                    rows="4"
-                    value={formData.notes}
-                    onChange={handleChange}
-                  ></textarea>
-                </div>
+                {selectedTour && (
+                  <div className="selected-tour-info">
+                    <h3>Информация о выбранном туре</h3>
+                    <div className="tour-info-grid">
+                      <div className="info-row">
+                        <span className="info-label">Страна:</span>
+                        <span className="info-value">
+                          {selectedTour.country}
+                        </span>
+                      </div>
+                      <div className="info-row">
+                        <span className="info-label">Даты:</span>
+                        <span className="info-value">
+                          {new Date(selectedTour.startDate).toLocaleDateString(
+                            "ru-RU"
+                          )}{" "}
+                          -{" "}
+                          {new Date(selectedTour.endDate).toLocaleDateString(
+                            "ru-RU"
+                          )}
+                        </span>
+                      </div>
+                      <div className="info-row">
+                        <span className="info-label">Свободные места:</span>
+                        <span className="info-value">
+                          {selectedTour.availableSlots}/
+                          {selectedTour.totalSlots}
+                        </span>
+                      </div>
+                      {selectedTour.price && (
+                        <div className="info-row">
+                          <span className="info-label">Цена:</span>
+                          <span className="info-value price">
+                            {new Intl.NumberFormat("ru-RU", {
+                              style: "currency",
+                              currency: "RUB",
+                              maximumFractionDigits: 0,
+                            }).format(selectedTour.price)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="form-actions">
-                  <button type="submit" className="btn btn-primary">
-                    Отправить заявку
-                  </button>
                   <button
                     type="button"
-                    className="btn btn-outline"
                     onClick={() => navigate("/")}
+                    className="btn btn-outline"
                   >
                     Отмена
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={submitting}
+                  >
+                    {submitting ? "Отправка..." : "Отправить заявку"}
                   </button>
                 </div>
               </form>

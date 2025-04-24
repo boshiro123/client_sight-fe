@@ -267,14 +267,8 @@ const TourPage = () => {
                 </div>
 
                 {!isSoldOut && !isRegistrationEnded() && (
-                  <button
-                    className="apply-button"
-                    onClick={handleApply}
-                    disabled={!isAuthenticated}
-                  >
-                    {isAuthenticated
-                      ? "Оставить заявку"
-                      : "Войдите, чтобы оставить заявку"}
+                  <button className="apply-button" onClick={handleApply}>
+                    Оставить заявку
                   </button>
                 )}
                 {!isAuthenticated && !isSoldOut && !isRegistrationEnded() && (

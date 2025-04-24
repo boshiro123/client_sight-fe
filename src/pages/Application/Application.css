@@ -205,3 +205,67 @@
     width: 100%;
   }
 }
+
+.selected-tour-info {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.selected-tour-info h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.tour-info-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.info-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0.25rem;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #6c757d;
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.info-value {
+  color: #212529;
+}
+
+.info-value.price {
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+.application-error {
+  background-color: #fdecea;
+  color: #e74c3c;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+  .info-row {
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+  }
+
+  .info-label {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}

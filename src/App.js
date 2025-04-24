@@ -7,6 +7,8 @@ import TouristProfile from "./pages/Tourist/Profile"
 import EmployeeDashboard from "./pages/Employee/Dashboard"
 import ManagerDashboard from "./pages/Manager/Dashboard"
 import EmployeeTours from "./pages/Employee/Tours"
+import EmployeeBookings from "./pages/Employee/Bookings"
+import ApplicationDetail from "./pages/Employee/Bookings/ApplicationDetail"
 import TourPage from "./pages/Tour"
 // import EmployeeApplications from "./pages/Employee/Applications"
 import "./App.css"
@@ -26,6 +28,11 @@ function App() {
         <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
         <Route path="/manager/dashboard" element={<ManagerDashboard />} />
         <Route path="/employee/tours" element={<EmployeeTours />} />
+        <Route path="/employee/bookings" element={<EmployeeBookings />} />
+        <Route
+          path="/employee/applications/:id"
+          element={<ApplicationDetail />}
+        />
 
         {/* Дополнительные маршруты будут добавлены позже */}
       </Routes>

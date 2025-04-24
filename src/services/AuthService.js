@@ -151,6 +151,18 @@ export const getUserId = () => {
   return userId ? parseInt(userId) : null
 }
 
+/**
+ * Обновление данных пользователя в localStorage
+ * @param {Object} userData - Обновленные данные пользователя
+ */
+export const setUserData = userData => {
+  try {
+    localStorage.setItem("user", JSON.stringify(userData))
+  } catch (error) {
+    console.error("Ошибка при сохранении данных пользователя:", error)
+  }
+}
+
 export default {
   login,
   register,
@@ -159,4 +171,5 @@ export default {
   isAuthenticated,
   getCurrentUser,
   getUserId,
+  setUserData,
 }
