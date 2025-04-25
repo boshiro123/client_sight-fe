@@ -8,6 +8,7 @@ import EmployeeDashboard from "./pages/Employee/Dashboard"
 import ManagerDashboard from "./pages/Manager/Dashboard"
 import EmployeeTours from "./pages/Employee/Tours"
 import EmployeeBookings from "./pages/Employee/Bookings"
+import EmployeeClients from "./pages/Employee/Clients"
 import ApplicationDetail from "./pages/Employee/Bookings/ApplicationDetail"
 import TourPage from "./pages/Tour"
 // import EmployeeApplications from "./pages/Employee/Applications"
@@ -29,6 +30,7 @@ function App() {
         <Route path="/manager/dashboard" element={<ManagerDashboard />} />
         <Route path="/employee/tours" element={<EmployeeTours />} />
         <Route path="/employee/bookings" element={<EmployeeBookings />} />
+        <Route path="/employee/clients" element={<EmployeeClients />} />
         <Route
           path="/employee/applications/:id"
           element={<ApplicationDetail />}

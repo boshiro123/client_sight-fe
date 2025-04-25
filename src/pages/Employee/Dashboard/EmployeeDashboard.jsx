@@ -82,7 +82,7 @@ const EmployeeDashboard = () => {
                       <a href="/employee/bookings">Бронирования</a>
                     </li>
                     <li>
-                      <a href="#clients">Клиенты</a>
+                      <a href="/employee/clients">Клиенты</a>
                     </li>
                     <li>
                       <a href="#reports">Отчеты</a>

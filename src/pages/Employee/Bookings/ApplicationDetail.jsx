@@ -23,6 +23,7 @@ const ApplicationDetail = () => {
         const data = await ApplicationService.getApplicationById(id)
         setApplication(data)
         setError(null)
+        console.log(data)
       } catch (err) {
         console.error("Ошибка при загрузке заявки:", err)
         setError(
@@ -103,23 +104,19 @@ const ApplicationDetail = () => {
       setUpdating(true)
       setUpdateSuccess(false)
 
-      // TODO: Здесь должен быть вызов API для обновления статуса заявки
-      // const updatedApplication = await ApplicationService.updateApplicationStatus(id, newStatus)
+      // Используем метод из ApplicationService для обновления статуса
+      const updatedApplication =
+        await ApplicationService.updateApplicationStatus(id, newStatus)
 
-      // Временное решение для демонстрации
-      setTimeout(() => {
-        setApplication({
-          ...application,
-          status: newStatus,
-        })
-        setUpdateSuccess(true)
-        setUpdating(false)
-      }, 1000)
+      // Обновляем состояние с новыми данными
+      setApplication(updatedApplication)
+      setUpdateSuccess(true)
     } catch (err) {
       console.error("Ошибка при обновлении статуса заявки:", err)
       setError(
         "Не удалось обновить статус заявки. Пожалуйста, попробуйте позже."
       )
+    } finally {
       setUpdating(false)
     }
   }
@@ -242,19 +239,19 @@ const ApplicationDetail = () => {
                   <div className="detail-row">
                     <span className="detail-label">Телефон:</span>
                     <span className="detail-value">
-                      {application.phoneNumber}
+                      {application.contact.phoneNumber}
                     </span>
                   </div>
                   <div className="detail-row">
                     <span className="detail-label">Пол:</span>
                     <span className="detail-value">
-                      {getGenderText(application.gender)}
+                      {getGenderText(application.contact.gender)}
                     </span>
                   </div>
                   <div className="detail-row">
                     <span className="detail-label">Возраст:</span>
                     <span className="detail-value">
-                      {getAgeGroupText(application.ageGroup)}
+                      {getAgeGroupText(application.contact.ageGroup)}
                     </span>
                   </div>
                 </div>
