@@ -26,7 +26,7 @@ const ToursPage = () => {
         }
 
         const user = await AuthService.getCurrentUser()
-        if (user.role !== "EMPLOYEE") {
+        if (user.role !== "EMPLOYEE" && user.role !== "MANAGER") {
           navigate("/")
           return
         }

@@ -98,6 +98,90 @@ export const getCurrentUser = async () => {
 }
 
 /**
+ * Создание нового сотрудника
+ * @param {Object} employeeData - Данные сотрудника (fullName, email)
+ * @returns {Promise<Object>} - Данные созданного сотрудника
+ */
+export const createEmployee = async employeeData => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/create-employee`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getAuthToken(),
+      },
+      body: JSON.stringify({
+        fullName: employeeData.fullName,
+        email: employeeData.email,
+        role: "EMPLOYEE",
+      }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Ошибка при создании сотрудника")
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error("Ошибка при создании сотрудника:", error)
+    throw error
+  }
+}
+
+/**
+ * Получить список всех сотрудников
+ * @returns {Promise<Array>} - Список сотрудников
+ */
+export const getEmployees = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/all-employees`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getAuthToken(),
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error("Ошибка при получении списка сотрудников")
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error("Ошибка при получении списка сотрудников:", error)
+    throw error
+  }
+}
+
+/**
+ * Удаление пользователя по ID
+ * @param {number} userId - ID пользователя для удаления
+ * @returns {Promise<void>}
+ */
+export const deleteUser = async userId => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getAuthToken(),
+      },
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Ошибка при удалении пользователя")
+    }
+
+    return true
+  } catch (error) {
+    console.error("Ошибка при удалении пользователя:", error)
+    throw error
+  }
+}
+
+/**
  * Выход пользователя
  */
 export const logout = () => {
@@ -172,4 +256,7 @@ export default {
   getCurrentUser,
   getUserId,
   setUserData,
+  createEmployee,
+  getEmployees,
+  deleteUser,
 }

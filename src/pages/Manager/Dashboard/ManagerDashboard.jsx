@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom"
 import Header from "../../../common-ui/Header"
 import Footer from "../../../common-ui/Footer"
 import * as AuthService from "../../../services/AuthService"
+import StatisticsService from "../../../services/StatisticsService"
 import "./ManagerDashboard.css"
 
 const ManagerDashboard = () => {
   const [userData, setUserData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [statistics, setStatistics] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -31,6 +33,10 @@ const ManagerDashboard = () => {
         }
 
         setUserData(user)
+
+        // Получаем статистику
+        const stats = await StatisticsService.getEmployeeStatistics()
+        setStatistics(stats)
       } catch (error) {
         console.error("Ошибка при получении данных пользователя:", error)
         setError(
@@ -78,16 +84,16 @@ const ManagerDashboard = () => {
                       <a href="#dashboard">Дашборд</a>
                     </li>
                     <li>
-                      <a href="#employees">Сотрудники</a>
+                      <a href="/employee/tours">Туры</a>
                     </li>
                     <li>
-                      <a href="#tours">Туры</a>
+                      <a href="/employee/bookings">Бронирования</a>
+                    </li>
+                    <li>
+                      <a href="/employee/clients">Пользователи</a>
                     </li>
                     <li>
                       <a href="#analytics">Аналитика</a>
-                    </li>
-                    <li>
-                      <a href="#settings">Настройки</a>
                     </li>
                   </ul>
                 </nav>
@@ -116,10 +122,12 @@ const ManagerDashboard = () => {
 
                   <div className="manager-stat-card">
                     <div className="stat-header">
-                      <h3>Заказы</h3>
+                      <h3>Бронирования</h3>
                     </div>
                     <div className="stat-body">
-                      <div className="stat-value">0</div>
+                      <div className="stat-value">
+                        {statistics?.applicationCount || 0}
+                      </div>
                       <div className="stat-label">За текущий месяц</div>
                     </div>
                   </div>
@@ -129,18 +137,22 @@ const ManagerDashboard = () => {
                       <h3>Клиенты</h3>
                     </div>
                     <div className="stat-body">
-                      <div className="stat-value">0</div>
+                      <div className="stat-value">
+                        {statistics?.clientCount || 0}
+                      </div>
                       <div className="stat-label">Всего клиентов</div>
                     </div>
                   </div>
 
                   <div className="manager-stat-card">
                     <div className="stat-header">
-                      <h3>Сотрудники</h3>
+                      <h3>Туры</h3>
                     </div>
                     <div className="stat-body">
-                      <div className="stat-value">0</div>
-                      <div className="stat-label">Активных сотрудников</div>
+                      <div className="stat-value">
+                        {statistics?.tourCount || 0}
+                      </div>
+                      <div className="stat-label">Активных туров</div>
                     </div>
                   </div>
                 </div>
