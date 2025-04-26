@@ -23,6 +23,7 @@ const TourFilters = ({ onFilterChange }) => {
   const countries = [
     "Россия",
     "Турция",
+    "Греция",
     "Египет",
     "Таиланд",
     "ОАЭ",

@@ -1,8 +1,14 @@
-import React from "react"
+import React, { useState } from "react"
 import { AgeGroup, Gender, TourType } from "../../../models/enums"
+import ApplicationsModal from "./ApplicationsModal"
+import DiscountForm from "./DiscountForm"
 import "./ClientsList.css"
 
-const ClientsList = ({ tourists, loading, error }) => {
+const ClientsList = ({ tourists, loading, error, refreshData }) => {
+  const [showApplications, setShowApplications] = useState(false)
+  const [showDiscountForm, setShowDiscountForm] = useState(false)
+  const [selectedClient, setSelectedClient] = useState(null)
+
   const getGenderText = gender => {
     switch (gender) {
       case Gender.MALE:
@@ -60,6 +66,22 @@ const ClientsList = ({ tourists, loading, error }) => {
 
   const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString("ru-RU")
+  }
+
+  const handleViewApplications = client => {
+    setSelectedClient(client)
+    setShowApplications(true)
+  }
+
+  const handleEditDiscount = client => {
+    setSelectedClient(client)
+    setShowDiscountForm(true)
+  }
+
+  const handleCloseModals = () => {
+    setShowApplications(false)
+    setShowDiscountForm(false)
+    setSelectedClient(null)
   }
 
   if (loading) {
@@ -146,16 +168,37 @@ const ClientsList = ({ tourists, loading, error }) => {
             </div>
 
             <div className="client-actions">
-              <button className="action-button view-applications">
+              <button
+                className="action-button view-applications"
+                onClick={() => handleViewApplications(tourist)}
+              >
                 Просмотреть заявки
               </button>
-              <button className="action-button edit-discount">
+              <button
+                className="action-button edit-discount"
+                onClick={() => handleEditDiscount(tourist.contact)}
+              >
                 Изменить скидку
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Модальное окно для просмотра заявок */}
+      <ApplicationsModal
+        isOpen={showApplications}
+        onClose={handleCloseModals}
+        client={selectedClient}
+      />
+
+      {/* Модальное окно для изменения скидки */}
+      <DiscountForm
+        isOpen={showDiscountForm}
+        onClose={handleCloseModals}
+        contact={selectedClient}
+        refreshData={refreshData}
+      />
     </div>
   )
 }

@@ -140,10 +140,44 @@ export const createUserFromContact = async contactData => {
   }
 }
 
+/**
+ * Обновление скидки для контакта
+ * @param {number} id - ID контакта
+ * @param {number} discountPercent - Процент скидки (от 0 до 100)
+ * @returns {Promise<Object>} - Обновленный контакт
+ */
+export const updateContactDiscount = async (id, discountPercent) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/contacts/update-discount-percent/${id}?discountPercent=${discountPercent}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: AuthService.getAuthToken(),
+        },
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(`Ошибка при обновлении скидки для контакта с ID: ${id}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error(
+      `Ошибка при обновлении скидки для контакта с ID: ${id}:`,
+      error
+    )
+    throw error
+  }
+}
+
 export default {
   getAllContacts,
   getAllTourists,
   createContact,
   updateContact,
   createUserFromContact,
+  updateContactDiscount,
 }

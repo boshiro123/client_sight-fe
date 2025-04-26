@@ -110,6 +110,7 @@ const ClientsPage = () => {
                 tourists={tourists}
                 loading={loadingTourists}
                 error={error}
+                refreshData={fetchTourists}
               />
             ) : (
               <ContactsList

@@ -4,11 +4,12 @@ import Header from "../../../common-ui/Header"
 import Footer from "../../../common-ui/Footer"
 import * as AuthService from "../../../services/AuthService"
 import "./EmployeeDashboard.css"
-
+import StatisticsService from "../../../services/StatisticsService"
 const EmployeeDashboard = () => {
   const [userData, setUserData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [statistics, setStatistics] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -39,6 +40,8 @@ const EmployeeDashboard = () => {
       } finally {
         setIsLoading(false)
       }
+      const statistics = await StatisticsService.getEmployeeStatistics()
+      setStatistics(statistics)
     }
 
     fetchUserData()
@@ -84,9 +87,6 @@ const EmployeeDashboard = () => {
                     <li>
                       <a href="/employee/clients">Клиенты</a>
                     </li>
-                    <li>
-                      <a href="#reports">Отчеты</a>
-                    </li>
                   </ul>
                 </nav>
               </div>
@@ -103,31 +103,23 @@ const EmployeeDashboard = () => {
                 <div className="dashboard-overview">
                   <div className="stat-card">
                     <h3>Активные туры</h3>
-                    <div className="stat-value">0</div>
+                    <div className="stat-value">
+                      {statistics?.tourCount || 0}
+                    </div>
                   </div>
 
                   <div className="stat-card">
                     <h3>Бронирования</h3>
-                    <div className="stat-value">0</div>
+                    <div className="stat-value">
+                      {statistics?.applicationCount || 0}
+                    </div>
                   </div>
 
                   <div className="stat-card">
                     <h3>Клиенты</h3>
-                    <div className="stat-value">0</div>
-                  </div>
-
-                  <div className="stat-card">
-                    <h3>Отзывы</h3>
-                    <div className="stat-value">0</div>
-                  </div>
-                </div>
-
-                <div className="dashboard-section">
-                  <div className="section-header">
-                    <h3>Последние действия</h3>
-                  </div>
-                  <div className="section-content">
-                    <p className="no-data">Нет данных для отображения</p>
+                    <div className="stat-value">
+                      {statistics?.clientCount || 0}
+                    </div>
                   </div>
                 </div>
               </div>
