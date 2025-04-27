@@ -11,6 +11,7 @@ import EmployeeBookings from "./pages/Employee/Bookings"
 import EmployeeClients from "./pages/Employee/Clients"
 import ApplicationDetail from "./pages/Employee/Bookings/ApplicationDetail"
 import TourPage from "./pages/Tour"
+import AnalyticsPage from "./pages/Manager/Analytics/AnalyticsPage"
 // import EmployeeApplications from "./pages/Employee/Applications"
 import "./App.css"
 
@@ -35,6 +36,9 @@ function App() {
           path="/employee/applications/:id"
           element={<ApplicationDetail />}
         />
+
+        {/* Маршруты для менеджера */}
+        <Route path="/manager/analytics" element={<AnalyticsPage />} />
 
         {/* Дополнительные маршруты будут добавлены позже */}
       </Routes>

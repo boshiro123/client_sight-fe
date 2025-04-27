@@ -93,7 +93,7 @@ const ManagerDashboard = () => {
                       <a href="/employee/clients">Пользователи</a>
                     </li>
                     <li>
-                      <a href="#analytics">Аналитика</a>
+                      <a href="/manager/analytics">Аналитика</a>
                     </li>
                   </ul>
                 </nav>

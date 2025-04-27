@@ -85,7 +85,6 @@ export const getCurrentUser = async () => {
       },
     })
 
-    console.log(response)
     if (!response.ok) {
       throw new Error("Ошибка при получении данных пользователя")
     }
