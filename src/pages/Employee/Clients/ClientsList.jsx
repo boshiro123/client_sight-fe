@@ -107,7 +107,7 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
           <div key={tourist.id} className="client-card">
             <div className="client-header">
               <h3 className="client-name">{tourist.fullName}</h3>
-              {tourist.contact.discountPercent > 0 && (
+              {tourist.contact && tourist.contact.discountPercent > 0 && (
                 <span className="client-discount">
                   Скидка: {tourist.contact.discountPercent}%
                 </span>
@@ -123,28 +123,28 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
               <div className="info-row">
                 <span className="info-label">Телефон:</span>
                 <span className="info-value">
-                  {tourist.contact.phoneNumber || "Не указан"}
+                  {tourist.contact?.phoneNumber || "Не указан"}
                 </span>
               </div>
 
               <div className="info-row">
                 <span className="info-label">Пол:</span>
                 <span className="info-value">
-                  {getGenderText(tourist.contact.gender)}
+                  {getGenderText(tourist.contact?.gender)}
                 </span>
               </div>
 
               <div className="info-row">
                 <span className="info-label">Возраст:</span>
                 <span className="info-value">
-                  {getAgeGroupText(tourist.contact.ageGroup)}
+                  {getAgeGroupText(tourist.contact?.ageGroup)}
                 </span>
               </div>
 
               <div className="info-row">
                 <span className="info-label">Предпочитаемые туры:</span>
                 <span className="info-value">
-                  {tourist.contact.preferredTourType
+                  {tourist.contact?.preferredTourType
                     ? getTourTypeText(tourist.contact.preferredTourType)
                     : "Не указаны"}
                 </span>
@@ -157,7 +157,7 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
                 </span>
               </div>
 
-              {tourist.contact.additionalInfo && (
+              {tourist.contact?.additionalInfo && (
                 <div className="info-row additional-info">
                   <span className="info-label">Дополнительная информация:</span>
                   <span className="info-value">
@@ -176,7 +176,7 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
               </button>
               <button
                 className="action-button edit-discount"
-                onClick={() => handleEditDiscount(tourist.contact)}
+                onClick={() => handleEditDiscount(tourist.contact || {})}
               >
                 Изменить скидку
               </button>

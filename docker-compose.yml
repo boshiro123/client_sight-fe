@@ -10,6 +10,8 @@ services:
     restart: always
     environment:
       - NODE_ENV=production
+    networks:
+      - client-sight-network
 
   # Для разработки
   frontend_dev:
@@ -25,3 +27,9 @@ services:
       - CHOKIDAR_USEPOLLING=true
     profiles:
       - dev
+    networks:
+      - client-sight-network
+
+networks:
+  client-sight-network:
+    external: true
