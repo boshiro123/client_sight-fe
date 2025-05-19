@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react"
 import { Helmet } from "react-helmet"
-import Header from "../../../common-ui/Header"
-import Footer from "../../../common-ui/Footer"
+import Header from "../../../../common-ui/Header"
+import Footer from "../../../../common-ui/Footer"
 import ClientsList from "./ClientsList"
 import ContactsList from "./ContactsList"
 import EmployeesList from "./EmployeesList"
-import * as ContactService from "../../../services/ContactService"
-import * as AuthService from "../../../services/AuthService"
+import * as ContactService from "../../../../services/ContactService"
+import * as AuthService from "../../../../services/AuthService"
 import "./ClientsPage.css"
 
 const ClientsPage = () => {

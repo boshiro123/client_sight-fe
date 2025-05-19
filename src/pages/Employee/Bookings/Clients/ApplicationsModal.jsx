@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import * as ApplicationService from "../../../services/ApplicationService"
-import { ApplicationStatus } from "../../../models/enums"
+import * as ApplicationService from "../../../../services/ApplicationService"
+import { ApplicationStatus } from "../../../../models/enums"
 import "./ApplicationsModal.css"
 
 const ApplicationsModal = ({ isOpen, onClose, client }) => {

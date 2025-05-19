@@ -8,8 +8,10 @@ import {
   LinearScale,
   BarElement,
   Title,
+  LineElement,
+  PointElement,
 } from "chart.js"
-import { Pie, Bar } from "react-chartjs-2"
+import { Pie, Bar, Line } from "react-chartjs-2"
 import { TourSeason, TourType } from "../../../models/enums"
 
 // Регистрируем необходимые компоненты для графиков
@@ -20,7 +22,9 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  Title
+  Title,
+  LineElement,
+  PointElement
 )
 
 const TourAnalytics = ({ data }) => {
@@ -90,6 +94,145 @@ const TourAnalytics = ({ data }) => {
     ],
   }
 
+  // Данные для прогноза по сезонам
+  const seasonPredictionData = {
+    labels: [
+      "Янв",
+      "Фев",
+      "Мар",
+      "Апр",
+      "Май",
+      "Июнь",
+      "Июль",
+      "Авг",
+      "Сен",
+      "Окт",
+      "Ноя",
+      "Дек",
+      "Янв*",
+      "Фев*",
+      "Мар*",
+    ],
+    datasets: [
+      {
+        label: "Зима",
+        data: [15, 20, 10, 5, 0, 0, 0, 0, 0, 0, 10, 25, 28, 30, 12],
+        borderColor: "#4e73df",
+        backgroundColor: "rgba(78, 115, 223, 0.1)",
+        fill: false,
+        tension: 0.4,
+        borderDash: [0, 0],
+      },
+      {
+        label: "Весна",
+        data: [0, 0, 15, 20, 25, 10, 0, 0, 0, 0, 0, 0, 0, 0, 16],
+        borderColor: "#1cc88a",
+        backgroundColor: "rgba(28, 200, 138, 0.1)",
+        fill: false,
+        tension: 0.4,
+        borderDash: [0, 0],
+      },
+      {
+        label: "Лето",
+        data: [0, 0, 0, 5, 15, 30, 35, 25, 10, 0, 0, 0, 0, 0, 0],
+        borderColor: "#f6c23e",
+        backgroundColor: "rgba(246, 194, 62, 0.1)",
+        fill: false,
+        tension: 0.4,
+        borderDash: [0, 0],
+      },
+      {
+        label: "Осень",
+        data: [0, 0, 0, 0, 0, 0, 0, 5, 20, 25, 15, 0, 0, 0, 0],
+        borderColor: "#e74a3b",
+        backgroundColor: "rgba(231, 74, 59, 0.1)",
+        fill: false,
+        tension: 0.4,
+        borderDash: [0, 0],
+      },
+    ],
+  }
+
+  // Добавляем стиль пунктирной линии для прогнозных значений
+  seasonPredictionData.datasets.forEach(dataset => {
+    dataset.borderDash = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5] // пунктир для прогнозируемых месяцев
+
+    // Также делаем точки разного размера
+    dataset.pointRadius = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 6]
+    dataset.pointStyle = [
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "star",
+      "star",
+      "star",
+    ]
+  })
+
+  // Данные для прогноза по типам туров
+  const tourTypePredictionData = {
+    labels: ["Q1", "Q2", "Q3", "Q4", "Q1*", "Q2*"],
+    datasets: [
+      {
+        label: "Пляжный",
+        data: [15, 25, 35, 15, 20, 30],
+        borderColor: "#4e73df",
+        backgroundColor: "rgba(78, 115, 223, 0.1)",
+        fill: false,
+        tension: 0.4,
+      },
+      {
+        label: "Экскурсионный",
+        data: [20, 15, 20, 25, 20, 15],
+        borderColor: "#1cc88a",
+        backgroundColor: "rgba(28, 200, 138, 0.1)",
+        fill: false,
+        tension: 0.4,
+      },
+      {
+        label: "Приключение",
+        data: [10, 15, 20, 10, 15, 25],
+        borderColor: "#f6c23e",
+        backgroundColor: "rgba(246, 194, 62, 0.1)",
+        fill: false,
+        tension: 0.4,
+      },
+      {
+        label: "Горнолыжный",
+        data: [15, 5, 0, 12, 14, 4],
+        borderColor: "#e74a3b",
+        backgroundColor: "rgba(231, 74, 59, 0.1)",
+        fill: false,
+        tension: 0.4,
+      },
+    ],
+  }
+
+  // Добавляем стиль пунктирной линии для прогнозных значений
+  tourTypePredictionData.datasets.forEach(dataset => {
+    dataset.borderDash = [0, 0, 0, 0, 5, 5] // пунктир для прогнозируемых кварталов
+
+    // Также делаем точки разного размера и стиля
+    dataset.pointRadius = [4, 4, 4, 4, 6, 6]
+    dataset.pointStyle = [
+      "circle",
+      "circle",
+      "circle",
+      "circle",
+      "star",
+      "star",
+    ]
+  })
+
   // Опции для диаграмм
   const pieOptions = {
     responsive: true,
@@ -112,6 +255,43 @@ const TourAnalytics = ({ data }) => {
     scales: {
       y: {
         beginAtZero: true,
+      },
+    },
+  }
+
+  // Опции для линейных графиков прогнозов
+  const lineOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      tooltip: {
+        callbacks: {
+          title: function (context) {
+            const label = context[0].label
+            if (label.endsWith("*")) {
+              return label + " (прогноз)"
+            }
+            return label
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Количество туров",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "* - прогнозные данные",
+        },
       },
     },
   }
@@ -239,6 +419,54 @@ const TourAnalytics = ({ data }) => {
         </div>
       </div>
 
+      <div className="analytics-row">
+        <div className="analytics-col">
+          <div className="analytics-card">
+            <div className="analytics-card-header">
+              <h3 className="analytics-card-title">
+                Прогноз популярности по сезонам
+              </h3>
+            </div>
+            <div className="analytics-card-body">
+              <div className="chart-container">
+                <Line data={seasonPredictionData} options={lineOptions} />
+              </div>
+              <div className="analytics-insights">
+                <p>
+                  Прогноз показывает ожидаемые изменения в популярности сезонов
+                  на следующий квартал.
+                </p>
+                <p>Звездочками (*) отмечены прогнозные значения.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="analytics-row">
+        <div className="analytics-col">
+          <div className="analytics-card">
+            <div className="analytics-card-header">
+              <h3 className="analytics-card-title">
+                Прогноз популярности типов туров
+              </h3>
+            </div>
+            <div className="analytics-card-body">
+              <div className="chart-container">
+                <Line data={tourTypePredictionData} options={lineOptions} />
+              </div>
+              <div className="analytics-insights">
+                <p>
+                  Прогноз показывает ожидаемые изменения в популярности типов
+                  туров на следующие 2 квартала.
+                </p>
+                <p>Звездочками (*) отмечены прогнозные значения.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="analytics-card">
         <div className="analytics-card-header">
           <h3 className="analytics-card-title">
@@ -250,20 +478,39 @@ const TourAnalytics = ({ data }) => {
             <thead>
               <tr>
                 <th>Сезон</th>
-                <th>Количество туров</th>
-                <th>Средняя популярность</th>
-                <th>Тренд</th>
-                <th>Прогноз</th>
+                <th>Текущее количество туров</th>
+                <th>Тенденция</th>
+                <th>Описание</th>
               </tr>
             </thead>
             <tbody>
-              {Object.entries(seasonPredictions).map(([season, data]) => (
+              {Object.entries(seasonPredictions).map(([season, prediction]) => (
                 <tr key={season}>
                   <td>{getSeasonName(season)}</td>
-                  <td>{tourSeasonDistribution[season]}</td>
-                  <td>{data.currentAverage} заявок/тур</td>
-                  <td>{renderTrendIndicator(data.trend, data.percentage)}</td>
-                  <td>{getTrendDescription(data.trend, data.percentage)}</td>
+                  <td>
+                    {season === TourSeason.WINTER &&
+                      tourSeasonDistribution.WINTER}
+                    {season === TourSeason.SPRING &&
+                      tourSeasonDistribution.SPRING}
+                    {season === TourSeason.SUMMER &&
+                      tourSeasonDistribution.SUMMER}
+                    {season === TourSeason.AUTUMN &&
+                      tourSeasonDistribution.AUTUMN}
+                    {season === TourSeason.ALL_YEAR &&
+                      tourSeasonDistribution.ALL_YEAR}
+                  </td>
+                  <td>
+                    {renderTrendIndicator(
+                      prediction.trend,
+                      prediction.percentage
+                    )}
+                  </td>
+                  <td>
+                    {getTrendDescription(
+                      prediction.trend,
+                      prediction.percentage
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -282,20 +529,41 @@ const TourAnalytics = ({ data }) => {
             <thead>
               <tr>
                 <th>Тип тура</th>
-                <th>Количество туров</th>
-                <th>Средняя популярность</th>
-                <th>Тренд</th>
-                <th>Прогноз</th>
+                <th>Текущее количество туров</th>
+                <th>Тенденция</th>
+                <th>Описание</th>
               </tr>
             </thead>
             <tbody>
-              {Object.entries(typePredictions).map(([type, data]) => (
+              {Object.entries(typePredictions).map(([type, prediction]) => (
                 <tr key={type}>
                   <td>{getTourTypeName(type)}</td>
-                  <td>{tourTypeDistribution[type]}</td>
-                  <td>{data.currentAverage} заявок/тур</td>
-                  <td>{renderTrendIndicator(data.trend, data.percentage)}</td>
-                  <td>{getTrendDescription(data.trend, data.percentage)}</td>
+                  <td>
+                    {type === TourType.BEACH && tourTypeDistribution.BEACH}
+                    {type === TourType.EXCURSION &&
+                      tourTypeDistribution.EXCURSION}
+                    {type === TourType.ADVENTURE &&
+                      tourTypeDistribution.ADVENTURE}
+                    {type === TourType.SKIING && tourTypeDistribution.SKIING}
+                    {type === TourType.CRUISE && tourTypeDistribution.CRUISE}
+                    {type === TourType.CULTURAL &&
+                      tourTypeDistribution.CULTURAL}
+                    {type === TourType.MEDICAL && tourTypeDistribution.MEDICAL}
+                    {type === TourType.EDUCATIONAL &&
+                      tourTypeDistribution.EDUCATIONAL}
+                  </td>
+                  <td>
+                    {renderTrendIndicator(
+                      prediction.trend,
+                      prediction.percentage
+                    )}
+                  </td>
+                  <td>
+                    {getTrendDescription(
+                      prediction.trend,
+                      prediction.percentage
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

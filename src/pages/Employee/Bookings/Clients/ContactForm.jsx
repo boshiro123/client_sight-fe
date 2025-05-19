@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { AgeGroup, Gender, TourType } from "../../../models/enums"
-import * as ContactService from "../../../services/ContactService"
+import { AgeGroup, Gender, TourType } from "../../../../models/enums"
+import * as ContactService from "../../../../services/ContactService"
 import "./ContactForm.css"
 
 const ContactForm = ({

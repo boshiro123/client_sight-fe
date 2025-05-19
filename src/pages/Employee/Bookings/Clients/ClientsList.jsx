@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { AgeGroup, Gender, TourType } from "../../../models/enums"
+import { AgeGroup, Gender, TourType } from "../../../../models/enums"
 import ApplicationsModal from "./ApplicationsModal"
 import DiscountForm from "./DiscountForm"
 import "./ClientsList.css"
