@@ -127,29 +127,45 @@
 }
 
 .tours-controls {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .tours-sort {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-top: -3rem;
-  margin-bottom: 1rem;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
 }
 
 .tours-sort label {
-  margin-right: 0.5rem;
   font-size: 0.9rem;
   color: #7f8c8d;
+  margin: 0;
 }
 
 .tours-sort select {
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.9rem;
   color: #2c3e50;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  min-width: 180px;
+}
+
+.tours-sort select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.tours-sort select:hover {
+  border-color: #bdc3c7;
 }
 
 .tours-grid {

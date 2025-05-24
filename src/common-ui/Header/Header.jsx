@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import * as AuthService from "../../services/AuthService"
 import "./Header.css"
 
@@ -8,6 +8,7 @@ const Header = () => {
   const [userData, setUserData] = useState(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -48,6 +49,31 @@ const Header = () => {
     }
   }
 
+  const handleToursClick = e => {
+    e.preventDefault()
+
+    // Если мы не на главной странице, сначала переходим на неё
+    if (location.pathname !== "/") {
+      navigate("/")
+      // Ждем рендера страницы, затем скроллим
+      setTimeout(() => {
+        const toursSection = document.querySelector("#tours-section")
+        if (toursSection) {
+          toursSection.scrollIntoView({ behavior: "smooth" })
+        }
+      }, 100)
+    } else {
+      // Если уже на главной, просто скроллим
+      const toursSection = document.querySelector("#tours-section")
+      if (toursSection) {
+        toursSection.scrollIntoView({ behavior: "smooth" })
+      }
+    }
+
+    // Закрываем мобильное меню
+    setIsMenuOpen(false)
+  }
+
   return (
     <header className="header">
       <div className="header-container">
@@ -69,9 +95,9 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/tours" className="nav-link">
+              <a href="#tours" className="nav-link" onClick={handleToursClick}>
                 Туры
-              </Link>
+              </a>
             </li>
             <li className="nav-item">
               <Link to="/about" className="nav-link">

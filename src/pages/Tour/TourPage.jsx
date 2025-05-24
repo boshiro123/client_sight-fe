@@ -150,7 +150,7 @@ const TourPage = () => {
     if (!price) return ""
     return new Intl.NumberFormat("ru-RU", {
       style: "currency",
-      currency: "RUB",
+      currency: "BYN",
       maximumFractionDigits: 0,
     }).format(price)
   }

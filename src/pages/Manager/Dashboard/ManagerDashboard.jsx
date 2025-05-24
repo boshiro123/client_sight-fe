@@ -56,9 +56,7 @@ const ManagerDashboard = () => {
 
       <main className="manager-dashboard-main">
         <div className="manager-dashboard-container">
-          <h1 className="manager-dashboard-title">
-            Панель управления менеджера
-          </h1>
+          <h1 className="manager-dashboard-title">Панель управления</h1>
 
           {isLoading ? (
             <div className="manager-dashboard-loading">Загрузка данных...</div>
@@ -115,7 +113,7 @@ const ManagerDashboard = () => {
                       <h3>Выручка</h3>
                     </div>
                     <div className="stat-body">
-                      <div className="stat-value">₽0</div>
+                      <div className="stat-value">BYN0</div>
                       <div className="stat-label">За текущий месяц</div>
                     </div>
                   </div>

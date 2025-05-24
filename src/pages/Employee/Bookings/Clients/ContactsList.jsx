@@ -254,9 +254,6 @@ const ContactsList = ({ contacts, loading, error, refreshContacts }) => {
                     ? "Отметить как не клиента"
                     : "Создать клиента"}
                 </button>
-                <button className="action-button create-tour">
-                  Подобрать тур
-                </button>
               </div>
             </div>
           ))}

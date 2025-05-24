@@ -28,6 +28,11 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
+.client-card.no-applications {
+  border-left: 4px solid #e74c3c;
+  background-color: #fef9f9;
+}
+
 .client-header {
   display: flex;
   justify-content: space-between;
@@ -44,8 +49,23 @@
   color: #2c3e50;
 }
 
+.client-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .client-discount {
   background-color: #f39c12;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.no-applications-badge {
+  background-color: #e74c3c;
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
@@ -94,6 +114,7 @@
 .additional-info .info-value {
   margin-top: 0.25rem;
   font-style: italic;
+  color: #95a5a6;
 }
 
 .client-actions {
@@ -116,12 +137,17 @@
   transition: background-color 0.2s ease;
 }
 
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .view-applications {
   background-color: #3498db;
   color: white;
 }
 
-.view-applications:hover {
+.view-applications:hover:not(:disabled) {
   background-color: #2980b9;
 }
 
@@ -132,6 +158,15 @@
 
 .edit-discount:hover {
   background-color: #e67e22;
+}
+
+.make-contact {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.make-contact:hover {
+  background-color: #c0392b;
 }
 
 .add-note {
@@ -148,6 +183,17 @@
     grid-template-columns: 1fr;
   }
 
+  .client-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .client-status {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
   .info-row {
     flex-direction: column;
   }
@@ -162,5 +208,14 @@
     margin-top: 0.25rem;
     margin-bottom: 0.5rem;
     padding-left: 0.5rem;
+  }
+
+  .client-actions {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+    min-width: auto;
   }
 }

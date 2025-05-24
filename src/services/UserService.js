@@ -3,8 +3,8 @@
  */
 import * as AuthService from "./AuthService"
 
-// const API_BASE_URL = "http://localhost:8080/api"
-const API_BASE_URL = "http://207.180.212.53:8080/api"
+const API_BASE_URL = "http://localhost:8080/api"
+// const API_BASE_URL = "http://207.180.212.53:8080/api"
 
 /**
  * Обновление профиля пользователя
@@ -61,6 +61,34 @@ export const updateProfile = async userData => {
   }
 }
 
+/**
+ * Мягкое удаление пользователя (создание контакта)
+ * @param {number} userId - ID пользователя для мягкого удаления
+ * @returns {Promise<void>}
+ */
+export const softDeleteUser = async userId => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/soft`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: AuthService.getAuthToken(),
+      },
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Ошибка при удалении пользователя")
+    }
+
+    return true
+  } catch (error) {
+    console.error("Ошибка при мягком удалении пользователя:", error)
+    throw error
+  }
+}
+
 export default {
   updateProfile,
+  softDeleteUser,
 }

@@ -12,6 +12,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [sortBy, setSortBy] = useState("date")
+  const [availableCountries, setAvailableCountries] = useState([])
 
   // Загрузка реальных данных с сервера
   useEffect(() => {
@@ -24,6 +25,12 @@ const Home = () => {
         console.log(toursData)
         setTours(toursData)
         setFilteredTours(toursData)
+
+        // Извлекаем уникальные страны из туров
+        const countries = [...new Set(toursData.map(tour => tour.country))]
+          .filter(Boolean)
+          .sort()
+        setAvailableCountries(countries)
       } catch (err) {
         console.error("Ошибка при загрузке туров:", err)
         setError("Не удалось загрузить туры. Пожалуйста, попробуйте позже.")
@@ -174,12 +181,15 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="tours-section">
+        <section className="tours-section" id="tours-section">
           <div className="container">
             <h2>Доступные туры</h2>
 
             <div className="tours-controls">
-              <TourFilters onFilterChange={handleFilterChange} />
+              <TourFilters
+                onFilterChange={handleFilterChange}
+                availableCountries={availableCountries}
+              />
 
               <div className="tours-sort">
                 <label htmlFor="sort">Сортировать по:</label>

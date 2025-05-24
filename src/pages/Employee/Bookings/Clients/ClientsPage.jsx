@@ -70,6 +70,7 @@ const ClientsPage = () => {
     try {
       setLoadingContacts(true)
       const data = await ContactService.getAllContacts()
+      console.log(data)
 
       // Фильтруем контакты, исключая тех, кто уже является клиентом с аккаунтом
       const filteredContacts = data.filter(contact => !contact.isClient)

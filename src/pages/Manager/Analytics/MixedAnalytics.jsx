@@ -14,7 +14,11 @@ import { TourSeason, TourType, AgeGroup, Gender } from "../../../models/enums"
 // Регистрируем необходимые компоненты для графиков
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-const MixedAnalytics = ({ seasonGenderData, typeAgeData }) => {
+const MixedAnalytics = ({ data }) => {
+  // Извлекаем данные из переданного объекта
+  const seasonGenderData = data.seasonGenderDistribution
+  const typeAgeData = data.typeAgeDistribution
+
   // Преобразование данных для графика "Сезон + Пол"
   const seasonGenderChartData = {
     labels: ["Зима", "Весна", "Лето", "Осень", "Круглый год"],
@@ -207,6 +211,161 @@ const MixedAnalytics = ({ seasonGenderData, typeAgeData }) => {
     </table>
   )
 
+  // Функция для генерации умных выводов на основе данных
+  const generateInsights = () => {
+    const insights = []
+
+    // Анализ сезонных предпочтений по полу
+    let maxSeasonGender = null
+    let maxSeasonGenderCount = 0
+    let totalByGender = { MALE: 0, FEMALE: 0, OTHER: 0 }
+
+    Object.entries(seasonGenderData).forEach(([season, genderData]) => {
+      const seasonTotal =
+        (genderData?.MALE || 0) +
+        (genderData?.FEMALE || 0) +
+        (genderData?.OTHER || 0)
+
+      totalByGender.MALE += genderData?.MALE || 0
+      totalByGender.FEMALE += genderData?.FEMALE || 0
+      totalByGender.OTHER += genderData?.OTHER || 0
+
+      Object.entries(genderData || {}).forEach(([gender, count]) => {
+        if (count > maxSeasonGenderCount) {
+          maxSeasonGenderCount = count
+          maxSeasonGender = { season, gender, count }
+        }
+      })
+    })
+
+    // Определяем самый популярный пол
+    const mostPopularGender = Object.entries(totalByGender).reduce((a, b) =>
+      totalByGender[a[0]] > totalByGender[b[0]] ? a : b
+    )[0]
+
+    const genderNames = {
+      MALE: "мужчины",
+      FEMALE: "женщины",
+      OTHER: "другие",
+    }
+
+    const seasonNames = {
+      WINTER: "зимой",
+      SPRING: "весной",
+      SUMMER: "летом",
+      AUTUMN: "осенью",
+      ALL_YEAR: "круглый год",
+    }
+
+    if (maxSeasonGender) {
+      insights.push(
+        `Наиболее активная группа: ${genderNames[maxSeasonGender.gender]} ${
+          seasonNames[maxSeasonGender.season]
+        } (${maxSeasonGender.count} заявок)`
+      )
+    }
+
+    if (mostPopularGender) {
+      const percentage =
+        totalByGender[mostPopularGender] > 0
+          ? (
+              (totalByGender[mostPopularGender] /
+                Object.values(totalByGender).reduce((a, b) => a + b, 0)) *
+              100
+            ).toFixed(1)
+          : 0
+      insights.push(
+        `${genderNames[mostPopularGender]} составляют ${percentage}% от всех заявок`
+      )
+    }
+
+    // Анализ возрастных предпочтений по типам туров
+    let maxTypeAge = null
+    let maxTypeAgeCount = 0
+
+    Object.entries(typeAgeData).forEach(([tourType, ageData]) => {
+      Object.entries(ageData || {}).forEach(([ageGroup, count]) => {
+        if (count > maxTypeAgeCount) {
+          maxTypeAgeCount = count
+          maxTypeAge = { tourType, ageGroup, count }
+        }
+      })
+    })
+
+    const tourTypeNames = {
+      BEACH: "пляжные туры",
+      EXCURSION: "экскурсионные туры",
+      ADVENTURE: "приключенческие туры",
+      SKIING: "горнолыжные туры",
+      CRUISE: "круизы",
+      CULTURAL: "культурные туры",
+      MEDICAL: "оздоровительные туры",
+      EDUCATIONAL: "образовательные туры",
+    }
+
+    const ageGroupNames = {
+      UNDER_18: "молодежь до 18 лет",
+      AGE_18_20: "возрастная группа 18-20 лет",
+      AGE_21_25: "возрастная группа 21-25 лет",
+      AGE_26_35: "возрастная группа 26-35 лет",
+      AGE_36_50: "возрастная группа 36-50 лет",
+      OVER_50: "группа старше 50 лет",
+    }
+
+    if (maxTypeAge) {
+      insights.push(
+        `Самое популярное сочетание: ${
+          ageGroupNames[maxTypeAge.ageGroup]
+        } предпочитают ${tourTypeNames[maxTypeAge.tourType]} (${
+          maxTypeAge.count
+        } заявок)`
+      )
+    }
+
+    // Анализ сезонной активности
+    const seasonTotals = {}
+    Object.entries(seasonGenderData).forEach(([season, genderData]) => {
+      seasonTotals[season] =
+        (genderData?.MALE || 0) +
+        (genderData?.FEMALE || 0) +
+        (genderData?.OTHER || 0)
+    })
+
+    const mostActiveSeason = Object.entries(seasonTotals).reduce((a, b) =>
+      seasonTotals[a[0]] > seasonTotals[b[0]] ? a : b
+    )
+
+    if (mostActiveSeason && mostActiveSeason[1] > 0) {
+      const seasonName = seasonNames[mostActiveSeason[0]]
+      insights.push(
+        `Пик активности приходится на ${seasonName} (${mostActiveSeason[1]} заявок)`
+      )
+    }
+
+    // Добавляем общие рекомендации, если есть данные
+    const totalApplications = Object.values(seasonTotals).reduce(
+      (a, b) => a + b,
+      0
+    )
+    if (totalApplications > 0) {
+      insights.push(
+        "Рекомендуется адаптировать маркетинговые кампании под выявленные предпочтения целевых групп"
+      )
+
+      if (totalApplications < 50) {
+        insights.push(
+          "Для более точных выводов рекомендуется собрать больше данных о заявках"
+        )
+      }
+    } else {
+      insights.push(
+        "Данных о заявках пока недостаточно для формирования выводов"
+      )
+    }
+
+    return insights
+  }
+
   return (
     <div className="mixed-analytics">
       <div className="analytics-card">
@@ -236,18 +395,9 @@ const MixedAnalytics = ({ seasonGenderData, typeAgeData }) => {
           <div className="analytics-insights">
             <h4>Ключевые выводы:</h4>
             <ul>
-              <li>
-                Анализ помогает выявить предпочтения разных возрастных групп по
-                типам туров
-              </li>
-              <li>Можно определить сезонные предпочтения мужчин и женщин</li>
-              <li>
-                Эти данные позволяют точнее таргетировать рекламные кампании
-              </li>
-              <li>
-                На основе этой информации можно разрабатывать специальные
-                предложения для конкретных сегментов клиентов
-              </li>
+              {generateInsights().map((insight, index) => (
+                <li key={index}>{insight}</li>
+              ))}
             </ul>
           </div>
         </div>

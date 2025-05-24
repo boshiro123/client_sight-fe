@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Season, TourType } from "../../models/enums"
 import "./TourFilters.css"
 
-const TourFilters = ({ onFilterChange }) => {
+const TourFilters = ({ onFilterChange, availableCountries = [] }) => {
   const [filters, setFilters] = useState({
     search: "",
     season: "",
@@ -17,20 +17,6 @@ const TourFilters = ({ onFilterChange }) => {
     { value: "4-7", label: "4-7 дней" },
     { value: "8-14", label: "8-14 дней" },
     { value: "15+", label: "15+ дней" },
-  ]
-
-  // Список стран (может быть получен с сервера в будущем)
-  const countries = [
-    "Россия",
-    "Турция",
-    "Греция",
-    "Египет",
-    "Таиланд",
-    "ОАЭ",
-    "Мальдивы",
-    "Греция",
-    "Австрия",
-    "Чехия",
   ]
 
   // Обработка изменения значений фильтров
@@ -80,9 +66,14 @@ const TourFilters = ({ onFilterChange }) => {
             id="country"
             value={filters.country}
             onChange={e => handleFilterChange("country", e.target.value)}
+            disabled={availableCountries.length === 0}
           >
-            <option value="">Все страны</option>
-            {countries.map(country => (
+            <option value="">
+              {availableCountries.length === 0
+                ? "Загрузка стран..."
+                : "Все страны"}
+            </option>
+            {availableCountries.map(country => (
               <option key={country} value={country}>
                 {country}
               </option>

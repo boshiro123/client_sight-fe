@@ -23,13 +23,38 @@ ChartJS.register(
 )
 
 const ClientAnalytics = ({ data }) => {
-  // Константы для доступа к данным
+  // Проверяем наличие данных
+  if (!data || typeof data !== "object") {
+    return (
+      <div className="analytics-error">
+        Данные аналитики клиентов недоступны
+      </div>
+    )
+  }
+
+  // Константы для доступа к данным с значениями по умолчанию
   const {
-    clientsVsContacts,
-    genderDistribution,
-    ageDistribution,
-    preferredTourTypeDistribution,
-    regularClients,
+    clientsVsContacts = { clients: 0, contacts: 0 },
+    genderDistribution = { MALE: 0, FEMALE: 0, OTHER: 0 },
+    ageDistribution = {
+      UNDER_18: 0,
+      AGE_18_20: 0,
+      AGE_21_25: 0,
+      AGE_26_35: 0,
+      AGE_36_50: 0,
+      OVER_50: 0,
+    },
+    preferredTourTypeDistribution = {
+      BEACH: 0,
+      EXCURSION: 0,
+      ADVENTURE: 0,
+      SKIING: 0,
+      CRUISE: 0,
+      CULTURAL: 0,
+      MEDICAL: 0,
+      EDUCATIONAL: 0,
+    },
+    regularClients = { count: 0, percentage: 0 },
   } = data
 
   // Формируем данные для круговой диаграммы "Клиенты vs Контакты"
@@ -37,7 +62,7 @@ const ClientAnalytics = ({ data }) => {
     labels: ["Клиенты", "Контакты"],
     datasets: [
       {
-        data: [clientsVsContacts.clients, clientsVsContacts.contacts],
+        data: [clientsVsContacts.clients || 0, clientsVsContacts.contacts || 0],
         backgroundColor: ["#4e73df", "#36b9cc"],
         borderWidth: 1,
       },
@@ -50,9 +75,9 @@ const ClientAnalytics = ({ data }) => {
     datasets: [
       {
         data: [
-          genderDistribution.MALE,
-          genderDistribution.FEMALE,
-          genderDistribution.OTHER,
+          genderDistribution.MALE || 0,
+          genderDistribution.FEMALE || 0,
+          genderDistribution.OTHER || 0,
         ],
         backgroundColor: ["#4e73df", "#e74a3b", "#1cc88a"],
         borderWidth: 1,
@@ -76,12 +101,12 @@ const ClientAnalytics = ({ data }) => {
       {
         label: "Количество клиентов",
         data: [
-          ageDistribution.UNDER_18,
-          ageDistribution.AGE_18_20,
-          ageDistribution.AGE_21_25,
-          ageDistribution.AGE_26_35,
-          ageDistribution.AGE_36_50,
-          ageDistribution.OVER_50,
+          ageDistribution.UNDER_18 || 0,
+          ageDistribution.AGE_18_20 || 0,
+          ageDistribution.AGE_21_25 || 0,
+          ageDistribution.AGE_26_35 || 0,
+          ageDistribution.AGE_36_50 || 0,
+          ageDistribution.OVER_50 || 0,
         ],
         backgroundColor: "#4e73df",
       },
@@ -106,14 +131,14 @@ const ClientAnalytics = ({ data }) => {
       {
         label: "Предпочтения клиентов",
         data: [
-          preferredTourTypeDistribution.BEACH,
-          preferredTourTypeDistribution.EXCURSION,
-          preferredTourTypeDistribution.ADVENTURE,
-          preferredTourTypeDistribution.SKIING,
-          preferredTourTypeDistribution.CRUISE,
-          preferredTourTypeDistribution.CULTURAL,
-          preferredTourTypeDistribution.MEDICAL,
-          preferredTourTypeDistribution.EDUCATIONAL,
+          preferredTourTypeDistribution.BEACH || 0,
+          preferredTourTypeDistribution.EXCURSION || 0,
+          preferredTourTypeDistribution.ADVENTURE || 0,
+          preferredTourTypeDistribution.SKIING || 0,
+          preferredTourTypeDistribution.CRUISE || 0,
+          preferredTourTypeDistribution.CULTURAL || 0,
+          preferredTourTypeDistribution.MEDICAL || 0,
+          preferredTourTypeDistribution.EDUCATIONAL || 0,
         ],
         backgroundColor: "#1cc88a",
       },

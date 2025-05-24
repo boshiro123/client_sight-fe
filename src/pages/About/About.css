@@ -1,0 +1,327 @@
+.about-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero Section */
+.page-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 100px 0 60px;
+  text-align: center;
+}
+
+.page-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.page-hero p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Company Info */
+.company-info {
+  padding: 80px 0;
+  background: #f8f9fa;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.info-text h2 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.info-text h2:first-child {
+  margin-top: 0;
+}
+
+.info-text p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #5a6c7d;
+  margin-bottom: 20px;
+}
+
+.advantages-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.advantages-list li {
+  position: relative;
+  padding: 10px 0 10px 30px;
+  font-size: 1.1rem;
+  color: #4a5568;
+}
+
+.advantages-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  color: #667eea;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.info-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: #5a6c7d;
+  font-weight: 500;
+}
+
+/* Belarus Focus */
+.belarus-focus {
+  padding: 80px 0;
+  background: white;
+}
+
+.belarus-focus h2 {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+}
+
+.belarus-text p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #5a6c7d;
+  margin-bottom: 30px;
+}
+
+.belarus-destinations {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+}
+
+.belarus-destinations li {
+  position: relative;
+  padding: 15px 0 15px 40px;
+  font-size: 1.1rem;
+  color: #4a5568;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.belarus-destinations li:last-child {
+  border-bottom: none;
+}
+
+.belarus-destinations li::before {
+  content: "🏰";
+  position: absolute;
+  left: 0;
+  top: 15px;
+  font-size: 1.2rem;
+}
+
+.belarus-destinations li strong {
+  color: #2c3e50;
+}
+
+/* Mission Vision */
+.mission-vision {
+  padding: 80px 0;
+  background: #f8f9fa;
+}
+
+.mv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+.mission h2,
+.vision h2 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.mission p,
+.vision p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #5a6c7d;
+}
+
+.mission {
+  padding: 40px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.vision {
+  padding: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px;
+}
+
+.vision h2 {
+  color: white;
+}
+
+.vision p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Team */
+.team {
+  padding: 80px 0;
+  background: white;
+  text-align: center;
+}
+
+.team h2 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+
+.team-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #5a6c7d;
+  max-width: 800px;
+  margin: 0 auto 50px;
+}
+
+.team-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.team-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-stat .number {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.team-stat .label {
+  font-size: 1rem;
+  color: #5a6c7d;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-hero h1 {
+    font-size: 2rem;
+  }
+
+  .page-hero p {
+    font-size: 1rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .mv-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .team-stats {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .belarus-destinations li {
+    padding-left: 30px;
+    font-size: 1rem;
+  }
+
+  .advantages-list li {
+    padding-left: 25px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .company-info,
+  .belarus-focus,
+  .mission-vision,
+  .team {
+    padding: 40px 0;
+  }
+
+  .page-hero {
+    padding: 60px 0 40px;
+  }
+
+  .mission,
+  .vision {
+    padding: 30px 20px;
+  }
+}

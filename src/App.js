@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import Application from "./pages/Application"
 import { Login, Register } from "./pages/Auth"
+import About from "./pages/About"
+import Contact from "./pages/Contact"
 import TouristProfile from "./pages/Tourist/Profile"
 import EmployeeDashboard from "./pages/Employee/Dashboard"
 import ManagerDashboard from "./pages/Manager/Dashboard"
@@ -21,6 +23,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/application" element={<Application />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/tours/:id" element={<TourPage />} />

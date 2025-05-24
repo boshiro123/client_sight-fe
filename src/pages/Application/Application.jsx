@@ -191,7 +191,7 @@ const Application = () => {
     return (
       <div className="application-page">
         <Header />
-        <main className="application-main">
+        <main className="application-main success-layout">
           <div className="container">
             <div className="success-message">
               <h2>Ваша заявка успешно отправлена!</h2>
@@ -418,7 +418,7 @@ const Application = () => {
                           <span className="info-value price">
                             {new Intl.NumberFormat("ru-RU", {
                               style: "currency",
-                              currency: "RUB",
+                              currency: "BYN",
                               maximumFractionDigits: 0,
                             }).format(selectedTour.price)}
                           </span>

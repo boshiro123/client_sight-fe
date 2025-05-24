@@ -76,36 +76,48 @@ const TourList = ({ tours, onEdit, onDelete }) => {
         <div>Действия</div>
       </div>
       <div className="tour-list-body">
-        {tours.map(tour => (
-          <div key={tour.id} className="tour-list-item">
-            <div className="tour-item-name">{tour.name}</div>
-            <div className="tour-item-country">{tour.country}</div>
-            <div className="tour-item-season">{getSeasonText(tour.season)}</div>
-            <div className="tour-item-type">{getTourTypeText(tour.type)}</div>
-            <div className="tour-item-slots">
-              {tour.availableSlots} / {tour.totalSlots} мест
+        {tours.map(tour => {
+          const dateRange = `${formatDate(tour.startDate)} - ${formatDate(
+            tour.endDate
+          )}`
+
+          return (
+            <div key={tour.id} className="tour-list-item">
+              <div className="tour-item-name" title={tour.name}>
+                {tour.name}
+              </div>
+              <div className="tour-item-country" title={tour.country}>
+                {tour.country}
+              </div>
+              <div className="tour-item-season">
+                {getSeasonText(tour.season)}
+              </div>
+              <div className="tour-item-type">{getTourTypeText(tour.type)}</div>
+              <div className="tour-item-slots">
+                {tour.availableSlots} / {tour.totalSlots} мест
+              </div>
+              <div className="tour-item-dates" title={dateRange}>
+                {dateRange}
+              </div>
+              <div className="tour-item-actions">
+                <button
+                  className="tour-edit-button"
+                  onClick={() => onEdit(tour)}
+                  title="Редактировать"
+                >
+                  <FaEdit />
+                </button>
+                <button
+                  className="tour-delete-button"
+                  onClick={() => onDelete(tour.id)}
+                  title="Удалить"
+                >
+                  <FaTrash />
+                </button>
+              </div>
             </div>
-            <div className="tour-item-dates">
-              {formatDate(tour.startDate)} - {formatDate(tour.endDate)}
-            </div>
-            <div className="tour-item-actions">
-              <button
-                className="tour-edit-button"
-                onClick={() => onEdit(tour)}
-                title="Редактировать"
-              >
-                <FaEdit />
-              </button>
-              <button
-                className="tour-delete-button"
-                onClick={() => onDelete(tour.id)}
-                title="Удалить"
-              >
-                <FaTrash />
-              </button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

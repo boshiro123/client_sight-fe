@@ -1,5 +1,7 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { AgeGroup, Gender, TourType } from "../../../../models/enums"
+import * as ApplicationService from "../../../../services/ApplicationService"
+import * as UserService from "../../../../services/UserService"
 import ApplicationsModal from "./ApplicationsModal"
 import DiscountForm from "./DiscountForm"
 import "./ClientsList.css"
@@ -8,6 +10,43 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
   const [showApplications, setShowApplications] = useState(false)
   const [showDiscountForm, setShowDiscountForm] = useState(false)
   const [selectedClient, setSelectedClient] = useState(null)
+  const [clientApplications, setClientApplications] = useState({})
+  const [loadingApplications, setLoadingApplications] = useState(false)
+
+  // Загружаем заявки для всех клиентов при загрузке компонента
+  useEffect(() => {
+    if (tourists && tourists.length > 0) {
+      loadAllClientApplications()
+    }
+  }, [tourists])
+
+  const loadAllClientApplications = async () => {
+    setLoadingApplications(true)
+    const applicationsData = {}
+
+    try {
+      for (const tourist of tourists) {
+        if (tourist.email) {
+          try {
+            const applications =
+              await ApplicationService.getApplicationsByEmail(tourist.email)
+            applicationsData[tourist.id] = applications
+          } catch (err) {
+            console.error(
+              `Ошибка при загрузке заявок для ${tourist.email}:`,
+              err
+            )
+            applicationsData[tourist.id] = []
+          }
+        }
+      }
+      setClientApplications(applicationsData)
+    } catch (error) {
+      console.error("Ошибка при загрузке заявок клиентов:", error)
+    } finally {
+      setLoadingApplications(false)
+    }
+  }
 
   const getGenderText = gender => {
     switch (gender) {
@@ -68,6 +107,11 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
     return new Date(dateString).toLocaleDateString("ru-RU")
   }
 
+  const hasApplications = clientId => {
+    const applications = clientApplications[clientId]
+    return applications && applications.length > 0
+  }
+
   const handleViewApplications = client => {
     setSelectedClient(client)
     setShowApplications(true)
@@ -76,6 +120,23 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
   const handleEditDiscount = client => {
     setSelectedClient(client)
     setShowDiscountForm(true)
+  }
+
+  const handleSoftDeleteUser = async client => {
+    if (
+      window.confirm(
+        `Вы действительно хотите сделать клиента "${client.fullName}" контактом? Это действие создаст контакт и уберет аккаунт пользователя.`
+      )
+    ) {
+      try {
+        await UserService.softDeleteUser(client.id)
+        alert(`Клиент "${client.fullName}" успешно преобразован в контакт`)
+        refreshData() // Обновляем данные
+      } catch (error) {
+        console.error("Ошибка при создании контакта:", error)
+        alert("Не удалось создать контакт. Пожалуйста, попробуйте позже.")
+      }
+    }
   }
 
   const handleCloseModals = () => {
@@ -101,17 +162,28 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
       <h2 className="section-title">
         Клиенты с аккаунтами ({tourists.length})
       </h2>
+      <br></br>
 
       <div className="client-cards">
         {tourists.map(tourist => (
-          <div key={tourist.id} className="client-card">
+          <div
+            key={tourist.id}
+            className={`client-card ${
+              !hasApplications(tourist.id) ? "no-applications" : ""
+            }`}
+          >
             <div className="client-header">
               <h3 className="client-name">{tourist.fullName}</h3>
-              {tourist.contact && tourist.contact.discountPercent > 0 && (
-                <span className="client-discount">
-                  Скидка: {tourist.contact.discountPercent}%
-                </span>
-              )}
+              <div className="client-status">
+                {tourist.contact && tourist.contact.discountPercent > 0 && (
+                  <span className="client-discount">
+                    Скидка: {tourist.contact.discountPercent}%
+                  </span>
+                )}
+                {!hasApplications(tourist.id) && !loadingApplications && (
+                  <span className="no-applications-badge">Нет заявок</span>
+                )}
+              </div>
             </div>
 
             <div className="client-info">
@@ -157,22 +229,25 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
                 </span>
               </div>
 
-              {tourist.contact?.additionalInfo && (
-                <div className="info-row additional-info">
-                  <span className="info-label">Дополнительная информация:</span>
-                  <span className="info-value">
-                    {tourist.contact.additionalInfo}
-                  </span>
-                </div>
-              )}
+              <div className="info-row additional-info">
+                <span className="info-label">Дополнительная информация:</span>
+                <span className="info-value">
+                  {tourist.contact?.additionalInfo || "Пусто"}
+                </span>
+              </div>
             </div>
 
             <div className="client-actions">
               <button
                 className="action-button view-applications"
                 onClick={() => handleViewApplications(tourist)}
+                disabled={loadingApplications}
               >
-                Просмотреть заявки
+                {hasApplications(tourist.id)
+                  ? `Просмотреть заявки (${
+                      clientApplications[tourist.id]?.length || 0
+                    })`
+                  : "Просмотреть заявки"}
               </button>
               <button
                 className="action-button edit-discount"
@@ -180,6 +255,14 @@ const ClientsList = ({ tourists, loading, error, refreshData }) => {
               >
                 Изменить скидку
               </button>
+              {!hasApplications(tourist.id) && !loadingApplications && (
+                <button
+                  className="action-button make-contact"
+                  onClick={() => handleSoftDeleteUser(tourist)}
+                >
+                  Сделать контактом
+                </button>
+              )}
             </div>
           </div>
         ))}

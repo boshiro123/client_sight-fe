@@ -1,8 +1,8 @@
 /**
  * Сервис для работы с аутентификацией
  */
-// const API_BASE_URL = "http://localhost:8080/api"
-const API_BASE_URL = "http://207.180.212.53:8080/api"
+const API_BASE_URL = "http://localhost:8080/api"
+// const API_BASE_URL = "http://207.180.212.53:8080/api"
 
 /**
  * Вход пользователя
