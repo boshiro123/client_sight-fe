@@ -206,14 +206,14 @@ const AnalyticsPage = () => {
                 >
                   Заявки
                 </button>
-                <button
+                {/* <button
                   className={`tab-button ${
                     activeTab === "mixed" ? "active" : ""
                   }`}
                   onClick={() => handleTabChange("mixed")}
                 >
                   Комбинированная аналитика
-                </button>
+                </button> */}
               </div>
 
               <div className="analytics-actions">
